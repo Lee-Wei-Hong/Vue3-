@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>this 指向觀念</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="images/favicon.ico" rel="shortcut icon">
+  <meta charset="UTF-8">
+  <script src="/javascripts/vendor.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.37/vue.global.js"></script>
+</head>
+<body class="bg-lighter">
+  <div class="container main my-5"><div class="row"><main class="col post">
+    <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">this 指向觀念</h1><small>檔名：<code>this.html</code></small></div>
+    <!-- 🔥🔥練習開始🔥🔥 -->
+    <script>
+      // #1 一個函式中包含多少參數
+      // var a = '全域'
+      // function fn(params) {
+      //   console.log(params, this, window, arguments);
+      //   /*
+      //   params => 1;
+      //   this=>window
+      //   window=>window
+      //   arguments=>[1, 2, 3, 4, 5, 6, callee: ƒ, Symbol(Symbol.iterator): ƒ]0: 11: 22: 33: 44: 55: 6callee: ƒ fn(params)length: 6Symbol(Symbol.iterator): ƒ values()[[Prototype]]: Object
+      //   */
+      //   debugger;
+      // }
+      // fn(1,2,3,4,5,6);
+      
+      
+      //練習1.
+      // function fn(params){
+      //   //arguments會收到所有參數，並且為類陣列
+      //   console.log(params,this,window, arguments);
+      //   /*
+      //   1 Window {window: Window, self: Window, document: document, name: '', location: Location, …} Window {window: Window, self: Window, document: document, name: '', location: Location, …} Arguments(5) [1, 2, 3, 4, 5, callee: ƒ, Symbol(Symbol.iterator): ƒ]
+      //   */
+      // }
+      // fn(1,2,3,4,5);
+      
+      
+      // #2 this 的指向為何
+      var obj = {
+        name: '小明',
+        fn: function(params) {
+          console.log(params, this, window, arguments);
+          /*
+          //   params => 1;
+          //   this=>{name: '小明', fn: ƒ}
+          //   window=>window
+          //   arguments=>[1, 2, 3, 4, 5, 6, callee: ƒ, Symbol(Symbol.iterator): ƒ]0: 11: 22: 33: 44: 55: 6callee: ƒ fn(params)length: 6Symbol(Symbol.iterator): ƒ values()[[Prototype]]: Object
+          //   */
+        }
+      }
+      obj.fn(1,2,3,4,5,6);
+      
+      // #3 注意：this 的指向相當複雜，大部分情境只需要了解其中一種即可(95%)
+      // 傳統函式中的 this 只與調用方式有關
+      //用const或let或var this指向會有所不同
+      /*
+      this的指向
+      1.obj.callSomeone():因為callSomeone往前是obj這個物件，所以this會指向obj這個物件
+      2.callSomeone():因為callSomeone往前沒有任何物件，所以this會指向全域，叫做simple call
+      */
+      
+      var someone = '全域';
+      function callSomeone() {
+        // debugger;
+        console.log(this.someone);
+      }
+      callSomeone();//全域
+      
+      // #4 各種運用變化
+      var obj = {
+        someone: '物件',
+        callSomeone() {
+          console.log(this.someone);
+        }
+      }
+      obj.callSomeone();//物件
+      
+      var obj2 = {
+        someone: '物件2',
+        callSomeone
+      }
+      obj2.callSomeone();//物件2
+      
+      var wrapObj = {
+        someone: '外層物件',
+        callSomeone,
+        innerObj: {
+          someone: '內層物件',
+          callSomeone,
+        }
+      }
+      wrapObj.callSomeone();//外層物件
+      //往前是innerObj物件，this會指向innerObj物件
+      wrapObj.innerObj.callSomeone();//內層物件
+      
+      var obj3 = {
+        someone: '物件 3',
+        fn() {
+          //simple call
+          callSomeone(); // 通常平常不會這樣去取用 this
+        }
+      }
+      obj3.fn();//全域
+      
+      var obj4 = {
+        someone: '物件 4',
+        fn() {
+          //callback function 大多是屬於simple call(指向全域)的方式 所以盡可能不要再裡面調用this
+          setTimeout(function () {
+            console.log(this.someone);
+          });
+        }
+      }
+      obj4.fn();//全域
+      
+    </script>
+    <!-- 🙇🙇練習結束🙇🙇 -->
+  </main>
+  
+  <aside
+  class="col-md-3"><div class="sticky-top" style="top: 76px">
+    <div class="list-group">
+      
+      <a href="/es6/shorthand.html"
+      class="list-group-item list-group-item-action
+      
+      ">
+      縮寫
+    </a>
+    
+    <a href="/es6/this.html"
+    class="list-group-item list-group-item-action
+    
+    active">
+    this 的運作
+  </a>
+  
+  <a href="/es6/arrow_function.html"
+  class="list-group-item list-group-item-action
+  
+  ">
+  箭頭函式
+</a>
+
+<a href="/es6/separation_of_concerns.html"
+class="list-group-item list-group-item-action
+
+">
+關注點分離
+</a>
+
+<a href="/es6/separation_of_concerns_work.html"
+class="list-group-item list-group-item-action
+
+">
+關注點分離 練習題
+</a>
+
+<a href="/es6/object_reference.html"
+class="list-group-item list-group-item-action
+
+">
+物件參考特性
+</a>
+
+<a href="/es6/promise.html"
+class="list-group-item list-group-item-action
+
+">
+Promise
+</a>
+
+<a href="/es6/esModule.html"
+class="list-group-item list-group-item-action
+
+">
+ES Module
+</a>
+
+<a href="/es6/esModule_2.html"
+class="list-group-item list-group-item-action
+
+">
+ES 模組延伸觀念
+</a>
+
+</div>
+<div class="mt-3 text-end p-2 bg-light rounded">
+  <small class="text-black-50 fw-light mb-0">文件版本：2022/11/1</small>
+</div>
+</div>
+
+</aside>
+
+</div>
+</div>
+
+<nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-secondary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Vue 3 練習手冊</a>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link active" href="/es6/shorthand.html">JS 必備觀念</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/intro/createApp.html">認識 Vue.js</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/template/v-text.html">模板</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/optionsApi/options-methods.html">方法</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/components/component_register.html">元件</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/advApi/adv-refs.html">進階</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/router/vue-router.html">路由</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/composition/proxy.html">Composition API</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="/pinia/layout.html">Pinia</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<footer class="footer py-2 bg-light">
+  <div class="container text-center">
+    <small class="text-black-50 fw-light mb-0">六角學院 Vue 課程專屬文件</small>
+  </div>
+</footer>
+<link rel="stylesheet" href="/stylesheets/all.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</body>
+</html>
